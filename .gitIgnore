@@ -1,0 +1,14 @@
+.idea/
+RemoteTestInstructions.md
+grocery-shopping-exercise.iml
+/src/.DS_Store
+/src/main/java/.DS_Store
+/src/main/java/uk/.DS_Store
+/src/main/java/uk/gov/.DS_Store
+/src/main/java/uk/gov/dwp/.DS_Store
+/src/main/java/uk/gov/dwp/uc/.DS_Store
+/src/test/java/.gitkeep
+/src/test/resources/
+.DS_Store
+
+/target/
