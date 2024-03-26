@@ -10,5 +10,5 @@ grocery-shopping-exercise.iml
 /src/test/java/.gitkeep
 /src/test/resources/
 .DS_Store
-
+/executables/grocery-shopping.jar
 /target/
