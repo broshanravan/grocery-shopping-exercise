@@ -1,5 +1,9 @@
 package thirdparty.promotions;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import thirdparty.entities.BasketItem;
 import thirdparty.entities.enums.MeasurementUnit;
 
@@ -7,18 +11,16 @@ import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class PromotionServiceImpl implements PromotionsService{
+    private List<String> discountableBarCodes = new LinkedList<String>();
+    double weightDiscountRate;
+    double discountableAmount;
+    double countDiscountRate;
 
-    private static List<String> discountableBarCodes = new LinkedList<String>();
-    double weightDiscountRate = 0.25;
-    double discountableAmount = 2;
-    double countDiscountRate = 0.5;
-
-
-    static {
-        discountableBarCodes.add("BN123");
-        discountableBarCodes.add("EG123");
-    }
     public double getDiscountWeight(List<BasketItem> basket ,String barcode){
         double discount = 0;
         int ItemWeight = 0;
@@ -41,19 +43,24 @@ public class PromotionServiceImpl implements PromotionsService{
         int count = 0;
         List<String> countedBarCodes = new LinkedList<String>();
         for (BasketItem basketItem: basket){
-          if(discountableBarCodes.contains(basketItem.getGroceryItem().getBarCode())) {
-              String discountedItemBarcode = basketItem.getGroceryItem().getBarCode();
-              if (!countedBarCodes.contains(discountedItemBarcode)){
-                  countedBarCodes.add(discountedItemBarcode);
-                  count += 1;
+
+            String barCode =basketItem.getGroceryItem().getBarCode();
+            double itemPrice = basketItem.getGroceryItem().getPrice();
+            MeasurementUnit measurementUnit = basketItem.getGroceryItem().getMeasurementUnit();
+          if(isCodeDiscounted(barCode) && measurementUnit.equals(MeasurementUnit.count)) {
+              for (BasketItem doscountedBasketItem: basket) {
+                   String discountedBarCode  = doscountedBasketItem.getGroceryItem().getBarCode();
+                  if (!countedBarCodes.contains(barCode)) {
+                      count += 1;
+                      if (count >= discountableAmount) {
+                          double discountableNum = Math.floor(count / discountableAmount);
+                          discount += itemPrice * discountableNum * countDiscountRate;
+                          countedBarCodes.add(barCode);
+                      }
+                  }
+
               }
-              if (!countedBarCodes.contains(discountedItemBarcode)) {
-                  double itemPrice = basketItem.getGroceryItem().getPrice();
-                  double discountable = Math.floor(count / discountableAmount);
-                  discount += itemPrice * discountable * countDiscountRate;
-                  countedBarCodes.add(discountedItemBarcode);
-              }
-              countedBarCodes.add(discountedItemBarcode);
+              countedBarCodes.add(barCode);
           }
 
         }
@@ -84,5 +91,10 @@ public class PromotionServiceImpl implements PromotionsService{
 
         return discountAmount;
 
+    }
+
+    private boolean isCodeDiscounted(String code){
+        boolean isDiscount = discountableBarCodes.contains(code);
+        return isDiscount;
     }
 }

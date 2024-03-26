@@ -6,12 +6,13 @@ import thirdparty.entities.BasketItem;
 import thirdparty.entities.GroceryItem;
 import thirdparty.entities.enums.MeasurementUnit;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class PromotionsServiceTest {
 
-    PromotionsService promotionsService = new PromotionServiceImpl();
+    private static PromotionsService promotionsService = new PromotionServiceImpl();
     private static List<BasketItem> basket = new LinkedList<BasketItem>();
 
     @BeforeAll
@@ -33,6 +34,17 @@ public class PromotionsServiceTest {
         basket.add(new BasketItem(Milk,0));
         basket.add(new BasketItem(Banana2,2));
         basket.add(new BasketItem(Serial,0));
+
+        double weightDiscountRate = 0.25;
+        double discountableAmount = 2;
+        double countDiscountRate = 1;
+        List<String> discountableBarCodes = new ArrayList<>();
+        discountableBarCodes.add("BA123");
+        discountableBarCodes.add("EG123");
+
+        promotionsService = new PromotionServiceImpl(discountableBarCodes,weightDiscountRate,discountableAmount,countDiscountRate);
+
+
     }
 
     @Test
@@ -45,7 +57,7 @@ public class PromotionsServiceTest {
     @Test
     public void getCountDiscountCountTest(){
         double countDiscount = promotionsService.getDiscountCount(basket);
-        //assert(countDiscount == 0.75);
+        assert(countDiscount == 0.7);
 
     }
 
