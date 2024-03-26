@@ -41,8 +41,8 @@ public class MainScreen extends JFrame {
     JTextField codeFld = new JTextField();
     JLabel paymentLbl  = new JLabel("paid");
     JTextField  paymentFld = new JTextField();
-    JLabel changeDueLbl  = new JLabel("Change due");
-    JTextField  changeFld = new JTextField();
+    JLabel promotionLbl = new JLabel("Promotion Discount");
+    JTextField promotionFld = new JTextField();
 
     JLabel paymentResultlable = new JLabel();
     JLabel invalidCodeLbl  = new JLabel("Invalid barcode, please try again");
@@ -133,10 +133,10 @@ public class MainScreen extends JFrame {
 
         getContentPane().add(paymentLbl);
         getContentPane().add(paymentFld);
-        getContentPane().add(changeDueLbl);
+        getContentPane().add(promotionLbl);
         getContentPane().add(paymentErrorLbl);
 
-        getContentPane().add(changeFld);
+        getContentPane().add(promotionFld);
 
 
         itemDetailsLbl.setBackground(Color.white);
@@ -270,39 +270,44 @@ public class MainScreen extends JFrame {
         nameFld.setBackground(Color.white);
         priceFld.setBackground(Color.white);
 
-        priceLbl.setBounds(10,85, 80,20);
+        priceLbl.setBounds(10,85, 100,20);
         priceFld.setBounds(100,85, 80,20);
 
         addBtn.setBounds(300,35, 100,20);
 
 
-        totalLbl.setBounds(10,245, 80,20);
-        totalFld.setBounds(100,245, 80,20);
-        VATLbl.setBounds(10,275, 80,20);
-        vatFld.setBounds(100,275, 80,20);
-        grandTotalLbl.setBounds(10,305, 80,20);
-        grandTotalFld.setBounds(100,305, 80,20);
+        totalLbl.setBounds(10,245, 100,20);
+        totalFld.setBounds(130,245, 80,20);
 
-        paymentLbl.setBounds(10,350, 80,20);
-        paymentFld.setBounds(100,350, 80,20);
-        paymentErrorLbl.setBounds(150,350, 80,20);
+        promotionLbl.setBounds(10,280, 150,20);
+        promotionFld.setBounds(130,280, 80,20);
+
+
+        VATLbl.setBounds(10,315, 100,20);
+        vatFld.setBounds(130,315, 80,20);
+
+        grandTotalLbl.setBounds(10,350, 100,20);
+        grandTotalFld.setBounds(130,350, 80,20);
+
+        paymentLbl.setBounds(10,385, 100,20);
+        paymentFld.setBounds(130,385, 80,20);
+        paymentErrorLbl.setBounds(150,375, 100,20);
         paymentErrorLbl.setVisible(false);
 
-        changeDueLbl.setBounds(10,395, 80,20);
-        changeFld.setBounds(100,395, 80,20);
+
 
         payBtn.setBounds(30,430, 120,20);
         adminBtn.setBounds(260,430, 120,20);
 
-        totalFld.setEditable(false);
-        vatFld.setEditable(false);
-        grandTotalFld.setEditable(false);
+        totalFld.setEnabled(false);
+        vatFld.setEnabled(false);
+        grandTotalFld.setEnabled(false);
         totalFld.setBackground(Color.white);
         totalFld.setBackground(Color.white);
         totalFld.setBackground(Color.white);
 
 
-        receipt.setEditable(false);
+        receipt.setEnabled(false);
 
 
         scrollPane.setBackground(new Color(155, 150, 142));
@@ -332,16 +337,16 @@ public class MainScreen extends JFrame {
             if(weight != null && !"".equalsIgnoreCase(weight.trim()) && groceryPaymentService.isAmountValid(weight)) {
                 double weightNum =Double.parseDouble(weight);
                 double price = weightNum * groceryItem.getPrice();
-                basket.add(new BasketItem(groceryItem,weightNum , price));
-                addItemToReceipt(new BasketItem(groceryItem, weightNum, price ));
+                basket.add(new BasketItem(groceryItem,weightNum ));
+                addItemToReceipt(new BasketItem(groceryItem, weightNum ));
                 calculateTotal();
                 clearItemDetails();
             } else {
                 invalidWeightLbl.setVisible(true);
             }
         } else {
-            basket.add(new BasketItem(groceryItem, 0,groceryItem.getPrice()));
-            addItemToReceipt(new BasketItem(groceryItem, 0, groceryItem.getPrice()));
+            basket.add(new BasketItem(groceryItem, 0));
+            addItemToReceipt(new BasketItem(groceryItem, 0));
             clearItemDetails();
             calculateTotal();
         }
@@ -386,7 +391,7 @@ public class MainScreen extends JFrame {
         decfor.setRoundingMode(RoundingMode.DOWN);
         String name = basketItem.getGroceryItem().getName();
         double weight = basketItem.getWeight();
-        double price = basketItem.getPrice();
+        double price = basketItem.getGroceryItem().getPrice();
         price = Double.parseDouble(decfor.format(price));
         String itemName = basketItem.getGroceryItem().getName();
         itemLabelContents += itemName + getTabs(itemName.length(), true) + weight + getTabs(2, false) +
@@ -402,7 +407,7 @@ public class MainScreen extends JFrame {
         double total = 0;
 
         for(BasketItem basketItem :basket ){
-            total += basketItem.getPrice();
+            total += basketItem.getGroceryItem().getPrice();
 
         }
         double vat = total * 0.17;
@@ -420,7 +425,7 @@ public class MainScreen extends JFrame {
         totalFld.setText("");
         vatFld.setText("");
         priceFld.setText("");
-        changeFld.setText("");
+        promotionFld.setText("");
         paymentFld.setText("");
         grandTotalFld.setText("");
         basket.removeAll(basket);

@@ -12,5 +12,4 @@ import lombok.Setter;
 public class BasketItem {
     GroceryItem groceryItem;
     double weight;
-    double price;
 }

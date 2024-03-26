@@ -81,7 +81,7 @@ public class GroceryInventoryServiceImpl implements GroceryInventoryService{
      */
     private static void populateTableWithInitialData() {
         //Todo Using a H2 database instead of Hashmap
-        GroceryItem milk = new GroceryItem("MK123", "milk", MeasurementUnit.count, 1.00);
+        GroceryItem milk = new GroceryItem("MK123", "Milk", MeasurementUnit.count, 1.00);
         itemsMap.put("MK123",milk);
 
         GroceryItem banana = new GroceryItem("BN123", "Banana", MeasurementUnit.weight, 1.50);
