@@ -8,6 +8,7 @@ import thirdparty.entities.BasketItem;
 import thirdparty.entities.enums.MeasurementUnit;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,27 +19,47 @@ import java.util.List;
 public class PromotionServiceImpl implements PromotionsService{
     private List<String> discountableBarCodes = new LinkedList<String>();
     double weightDiscountRate;
-    double discountableAmount;
+    double discountableWeightPerGroup;
     double countDiscountRate;
+    double discountableCountPerGroup;
 
-    public double getDiscountWeight(List<BasketItem> basket ,String barcode){
+
+
+
+    public double getDiscountWeight(List<BasketItem> basket){
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
         double discount = 0;
-        int ItemWeight = 0;
+        int weight = 0;
+        List<String> countedBarCodes = new LinkedList<String>();
         for (BasketItem basketItem: basket){
-            if(discountableBarCodes.contains(basketItem.getGroceryItem().getBarCode())){
-                if(basketItem.getGroceryItem().getMeasurementUnit().equals(MeasurementUnit.weight))
-                ItemWeight += 1;
-            }
-            if(ItemWeight > discountableAmount){
-                discount = basketItem.getGroceryItem().getPrice() * countDiscountRate;
+
+            String barCode =basketItem.getGroceryItem().getBarCode();
+            double itemPrice = basketItem.getGroceryItem().getPrice();
+            MeasurementUnit measurementUnit = basketItem.getGroceryItem().getMeasurementUnit();
+            if(isCodeDiscounted(barCode) && measurementUnit.equals(MeasurementUnit.weight)) {
+                for (BasketItem doscountedBasketItem: basket) {
+                    double itemWeight = basketItem.getWeight();
+                    String discountedBarCode  = doscountedBasketItem.getGroceryItem().getBarCode();
+                    if (!countedBarCodes.contains(barCode)) {
+                        weight += itemWeight ;
+                        if (weight >= discountableWeightPerGroup) {
+                            //double discountableGroupsNum = Math.floor(weight / discountableWeightPerGroup);
+                            discount += weight * itemPrice * weightDiscountRate;
+                            countedBarCodes.add(barCode);
+                        }
+                    }
+
+                }
+                countedBarCodes.add(barCode);
             }
 
         }
-
+        discount = Double.parseDouble(decimalFormat.format(discount));
         return discount;
     }
 
     public double getDiscountCount(List<BasketItem> basket){
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
         double discount = 0;
         int count = 0;
         List<String> countedBarCodes = new LinkedList<String>();
@@ -49,12 +70,12 @@ public class PromotionServiceImpl implements PromotionsService{
             MeasurementUnit measurementUnit = basketItem.getGroceryItem().getMeasurementUnit();
           if(isCodeDiscounted(barCode) && measurementUnit.equals(MeasurementUnit.count)) {
               for (BasketItem doscountedBasketItem: basket) {
-                   String discountedBarCode  = doscountedBasketItem.getGroceryItem().getBarCode();
+                   //String discountedBarCode  = doscountedBasketItem.getGroceryItem().getBarCode();
                   if (!countedBarCodes.contains(barCode)) {
                       count += 1;
-                      if (count >= discountableAmount) {
-                          double discountableNum = Math.floor(count / discountableAmount);
-                          discount += itemPrice * discountableNum * countDiscountRate;
+                      if (count >= discountableCountPerGroup) {
+                          double discountableGroupsNum = Math.floor(count / discountableCountPerGroup);
+                          discount += itemPrice * discountableGroupsNum * countDiscountRate * discountableCountPerGroup;;
                           countedBarCodes.add(barCode);
                       }
                   }
@@ -64,34 +85,20 @@ public class PromotionServiceImpl implements PromotionsService{
           }
 
         }
+        discount = Double.parseDouble(decimalFormat.format(discount));
         return discount;
     }
 
-    public double getTotalDiscountCount(List<BasketItem> basket ,String barcode){
-        double discount = 0;
-        int count = 0;
-        List<String> countedBarCodes = new LinkedList<String>();
-        for (BasketItem basketItem: basket) {
-            barcode = basketItem.getGroceryItem().getBarCode();
-            if (!countedBarCodes.contains(barcode) && discountableBarCodes.contains(barcode)) {
-                if (basketItem.getGroceryItem().getMeasurementUnit().equals(MeasurementUnit.count)) {
-                    discount += getDiscountWeight(basket, barcode);
-                } else {
-                    discount += getDiscountCount(basket);
-                }
-            }
-        }
+    public double getTotalDiscount(List<BasketItem> basket){
+       double totalDiscount = 0;
 
-        return discount;
+        double discountWeight = this.getDiscountWeight(basket);
+        double discountCount = this.getDiscountCount(basket);
+
+        totalDiscount = discountWeight + discountCount;
+        return totalDiscount;
     }
 
-    public BigDecimal getAmountSaved(List<BasketItem> basket){
-
-        BigDecimal discountAmount = new  BigDecimal(0);
-
-        return discountAmount;
-
-    }
 
     private boolean isCodeDiscounted(String code){
         boolean isDiscount = discountableBarCodes.contains(code);

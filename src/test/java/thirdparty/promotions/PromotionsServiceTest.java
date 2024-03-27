@@ -30,27 +30,39 @@ public class PromotionsServiceTest {
         basket.add(new BasketItem(Egg,0));
         basket.add(new BasketItem(Egg,0));
         basket.add(new BasketItem(anotherEgg,0));
-        basket.add(new BasketItem(Grape,2));
+        basket.add(new BasketItem(Grape,2.00));
         basket.add(new BasketItem(Milk,0));
-        basket.add(new BasketItem(Banana2,2));
+        basket.add(new BasketItem(Banana2,2.00));
         basket.add(new BasketItem(Serial,0));
 
         double weightDiscountRate = 0.25;
-        double discountableAmount = 2;
-        double countDiscountRate = 1;
+        double discountableWeight = 3;
+        double countDiscountRate = 0.5;
+        double discountableCount = 2;
         List<String> discountableBarCodes = new ArrayList<>();
         discountableBarCodes.add("BA123");
         discountableBarCodes.add("EG123");
 
-        promotionsService = new PromotionServiceImpl(discountableBarCodes,weightDiscountRate,discountableAmount,countDiscountRate);
+        promotionsService = new PromotionServiceImpl(discountableBarCodes,
+                weightDiscountRate,
+                discountableWeight,
+                countDiscountRate,
+                discountableCount);
+
 
 
     }
 
     @Test
+    public void getTotalDiscountTest(){
+        double totalDiscount = promotionsService.getTotalDiscount(basket);
+        assert(totalDiscount == 1.82) ;
+    }
+
+    @Test
     public void getCountDiscountWeightTest(){
-        double weightDiscount = promotionsService.getDiscountWeight(basket,"BN123");
-        assert(weightDiscount == 0);
+        double weightDiscount = promotionsService.getDiscountWeight(basket);
+        assert(weightDiscount == 1.12);
 
     }
 

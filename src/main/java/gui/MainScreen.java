@@ -8,6 +8,8 @@ import thirdparty.inventory.GroceryInventoryServiceImpl;
 import thirdparty.paymentgateway.GroceryPaymentService;
 import thirdparty.paymentgateway.GroceryPaymentServiceImpl;
 import thirdparty.paymentgateway.PaymentResult;
+import thirdparty.promotions.PromotionServiceImpl;
+import thirdparty.promotions.PromotionsService;
 
 import javax.swing.*;
 
@@ -25,6 +27,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,7 +35,23 @@ public class MainScreen extends JFrame {
 
     GroceryInventoryService groceryInventoryService = new GroceryInventoryServiceImpl();
     GroceryPaymentService groceryPaymentService = new GroceryPaymentServiceImpl();
+
+
+    double weightDiscountRate = 0.25;
+    double discountableweight = 3;
+    double countDiscountRate = 0.5;
+    double discountableCount = 2;
+    List<String> discountableBarCodes = List.of("BN123","EG123");
+
+    PromotionsService promotionsService = new PromotionServiceImpl(discountableBarCodes,
+                                                 weightDiscountRate,
+                                                 discountableweight,
+                                                 countDiscountRate,
+                                                 discountableCount);
+
     private JPanel backGroundPnl;
+
+    double promotionalDiscount = 0 ;
 
 
 
@@ -68,8 +87,12 @@ public class MainScreen extends JFrame {
     JLabel grandTotalLbl  = new JLabel("Grand Total £");
     JTextField grandTotalFld = new JTextField();
     JButton addBtn = new JButton("Add Item");
-    JButton payBtn = new JButton("Complete payment");
-    JButton adminBtn = new JButton("Administration");
+
+    JButton clearBtn = new JButton("Complete payment");
+
+    JButton payBtn = new JButton("Clear");
+    JButton exitBtn = new JButton("Exit");
+    JButton adminBtn = new JButton("Admin");
 
     JLabel paymentErrorLbl = new JLabel("Payment Should be numeric");
 
@@ -105,6 +128,8 @@ public class MainScreen extends JFrame {
         addBtn.addActionListener(buttonListener);
         payBtn.addActionListener(buttonListener);
         adminBtn.addActionListener(buttonListener);
+        clearBtn.addActionListener(buttonListener);
+        exitBtn.addActionListener(buttonListener);
 
         getContentPane().add(codeLbl);
         getContentPane().add(nameLbl);
@@ -119,6 +144,9 @@ public class MainScreen extends JFrame {
         getContentPane().add(grandTotalLbl);
         getContentPane().add(addBtn);
         getContentPane().add(payBtn);
+        getContentPane().add(clearBtn);
+        getContentPane().add(exitBtn);
+
 
         getContentPane().add(adminBtn);
 
@@ -182,17 +210,17 @@ public class MainScreen extends JFrame {
             }
 
             public void changedUpdate(DocumentEvent e) {
-                calculate();
+                calculateSingleItemPriceByWeight();
             }
 
             public void removeUpdate(DocumentEvent e) {
-                calculate();
+                calculateSingleItemPriceByWeight();
             }
 
             public void insertUpdate(DocumentEvent e) {
-                calculate();
+                calculateSingleItemPriceByWeight();
             }
-            public void calculate() {
+            public void calculateSingleItemPriceByWeight() {
                 decfor.setRoundingMode(RoundingMode.DOWN);
                 String weight = weightFld.getText();
                 if (groceryPaymentService.isAmountValid(weight)) {
@@ -296,8 +324,10 @@ public class MainScreen extends JFrame {
 
 
 
-        payBtn.setBounds(30,430, 120,20);
-        adminBtn.setBounds(260,430, 120,20);
+        payBtn.setBounds(10,430, 80,20);
+        clearBtn .setBounds(105,430, 80,20);
+        exitBtn.setBounds(200,430, 80,20);
+        adminBtn.setBounds(295,430, 80,20);
 
         totalFld.setEnabled(false);
         vatFld.setEnabled(false);
@@ -350,6 +380,8 @@ public class MainScreen extends JFrame {
             clearItemDetails();
             calculateTotal();
         }
+        promotionalDiscount = promotionsService.getTotalDiscount(basket);
+        promotionFld.setText(String.valueOf(promotionalDiscount));
     }
 
    ActionListener buttonListener = new ActionListener() {
@@ -362,11 +394,16 @@ public class MainScreen extends JFrame {
 
            } else if(e.getActionCommand().equals("Complete payment")){
                isPaymentCompleted();
-           }else  if(e.getActionCommand().equals("Administration")){
+           }else if(e.getActionCommand().equals("Admin")){
                LoginDialogBox  loginDialogBox= new LoginDialogBox();
                loginDialogBox.setModal(true);
                loginDialogBox.setVisible(true);
 
+           }
+           else if(e.getActionCommand().equals("Clear")){
+               resetScreen();
+           }else if(e.getActionCommand().equals("Exit")){
+              System.exit(0);
            }
 
        }
@@ -399,6 +436,7 @@ public class MainScreen extends JFrame {
         JLabel itemLbl = new JLabel(itemLabelContents);
         receipt.setText(itemLabelContents);
         itemLbl.setBounds(0, y, 380,20);
+        promotionFld.setText(String.valueOf(promotionalDiscount));
         y += 20;
 
     }
@@ -410,12 +448,16 @@ public class MainScreen extends JFrame {
             total += basketItem.getGroceryItem().getPrice();
 
         }
-        double vat = total * 0.17;
-        double grandTotal = total + vat;
+        total = total ;
+        double priceIncludingPromotions = total - promotionalDiscount;
+        double vat = (priceIncludingPromotions) * 0.17;
+        double grandTotal = priceIncludingPromotions  + vat;
         totalFld.setText(String.valueOf(decfor.format(total)));
+        promotionFld.setText(String.valueOf(promotionalDiscount));
         vatFld.setText(String.valueOf(decfor.format(vat)));
         grandTotalFld.setText(String.valueOf(decfor.format(grandTotal)));
     }
+
 
     public void resetScreen(){
         codeFld.setText("");
