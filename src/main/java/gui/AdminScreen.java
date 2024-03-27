@@ -45,6 +45,7 @@ public class AdminScreen extends JDialog{
         setTitle("Inventory maintenance");
         this.setResizable(false);
         setLocationRelativeTo(null);
+        getContentPane().setBackground(new Color(255, 255, 242));
 
 
         this.setLayout(null);
@@ -157,7 +158,7 @@ public class AdminScreen extends JDialog{
                 }
 
             } else if (e.getActionCommand().equals("Completed")) {
-                setVisible(false);
+                completed();
 
             }
 
@@ -165,6 +166,9 @@ public class AdminScreen extends JDialog{
     };
 
 
+    private void completed(){
+        this.setVisible(false);
+    }
     private void clearFields(String itemName){
         JOptionPane.showMessageDialog(this,"Item " + itemName + " has been added to inventory");
         barCodeFld.setText("");
@@ -173,35 +177,6 @@ public class AdminScreen extends JDialog{
         measurementCombo.setSelectedItem("Please Select");
 
     }
-/*
-    private boolean isBarCodeValid(String barcode){
-
-        Boolean barCodeValid = true;
-        String barcodeLetters  = barcode.substring(0,2);
-        String barcodeNumbers  = barcode.substring(2,barcode.length());
-        int number = 0;
-        while (number < 10){
-            if(barcodeLetters.contains(String.valueOf(number))){
-                barCodeValid = false;
-                break;
-            }
-            number++;
-        }
-        if(barcode.length() != 5){
-            barCodeValid = false;;
-        }
-        try{
-            Double.parseDouble(barcodeNumbers);
-        } catch (NumberFormatException nfe){
-            barCodeValid = false;
-        }
-
-        return barCodeValid;
-   }
-
-
-
- */
 
 
 }

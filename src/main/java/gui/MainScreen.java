@@ -88,7 +88,7 @@ public class MainScreen extends JFrame {
     JTextField grandTotalFld = new JTextField();
     JButton addBtn = new JButton("Add Item");
 
-    JButton clearBtn = new JButton("Complete payment");
+    JButton clearBtn = new JButton("Payment");
 
     JButton payBtn = new JButton("Clear");
     JButton exitBtn = new JButton("Exit");
@@ -101,7 +101,7 @@ public class MainScreen extends JFrame {
     JScrollPane scrollPane = new JScrollPane(receipt);
 
     private int hight = 500;
-    private int width = 420;
+    private int width = 450;
 
     public MainScreen(){
         setupScreen();
@@ -192,7 +192,7 @@ public class MainScreen extends JFrame {
                 calculate();
             }
             public void calculate() {
-                makePayment();
+
             }
 
         });
@@ -324,10 +324,11 @@ public class MainScreen extends JFrame {
 
 
 
-        payBtn.setBounds(10,430, 80,20);
-        clearBtn .setBounds(105,430, 80,20);
-        exitBtn.setBounds(200,430, 80,20);
-        adminBtn.setBounds(295,430, 80,20);
+        clearBtn .setBounds(10,430, 100,20);
+        payBtn.setBounds(115,430, 100,20);
+
+        exitBtn.setBounds(220,430, 100,20);
+        adminBtn.setBounds(325,430, 100,20);
 
         totalFld.setEnabled(false);
         vatFld.setEnabled(false);
@@ -392,7 +393,8 @@ public class MainScreen extends JFrame {
                    addItemToBasket(groceryItem);
                }
 
-           } else if(e.getActionCommand().equals("Complete payment")){
+           } else if(e.getActionCommand().equals("Payment")){
+               makePayment();
                isPaymentCompleted();
            }else if(e.getActionCommand().equals("Admin")){
                LoginDialogBox  loginDialogBox= new LoginDialogBox();
@@ -412,11 +414,11 @@ public class MainScreen extends JFrame {
     private boolean isPaymentCompleted(){
 
         if(paymentCompleted) {
-            JOptionPane.showMessageDialog(this, "Change due is " + paymentResultMessage  + ". Thank you");
+            JOptionPane.showMessageDialog(this, paymentResultMessage );
             resetScreen();
             return true;
         } else{
-            JOptionPane.showMessageDialog(this, "remaining due is £ " + paymentResultMessage );
+            JOptionPane.showMessageDialog(this,  paymentResultMessage );
             return  false;
 
         }
@@ -505,7 +507,8 @@ public class MainScreen extends JFrame {
                 groceryPaymentService.makePayment(123, paymentAmount);
 
                 PaymentResult paymentResult = groceryPaymentService.getPaymentResult();
-                paymentResultMessage = String.valueOf(paymentResult.getChange());
+                double change = paymentResult.getChange();
+                paymentResultMessage = "Your Change is " + Double.parseDouble(decfor.format(change)) + ", thank you!";
                 paymentResultlable.setText(paymentResult.getPaymentResultMessage());
                 paymentCompleted = true;
             }else {

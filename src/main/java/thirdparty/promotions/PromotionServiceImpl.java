@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import thirdparty.entities.BasketItem;
+import thirdparty.entities.GroceryItem;
 import thirdparty.entities.enums.MeasurementUnit;
 
 import java.math.BigDecimal;
@@ -29,7 +30,7 @@ public class PromotionServiceImpl implements PromotionsService{
     public double getDiscountWeight(List<BasketItem> basket){
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         double discount = 0;
-        int weight = 0;
+        double weight = 0;
         List<String> countedBarCodes = new LinkedList<String>();
         for (BasketItem basketItem: basket){
 
@@ -37,20 +38,22 @@ public class PromotionServiceImpl implements PromotionsService{
             double itemPrice = basketItem.getGroceryItem().getPrice();
             MeasurementUnit measurementUnit = basketItem.getGroceryItem().getMeasurementUnit();
             if(isCodeDiscounted(barCode) && measurementUnit.equals(MeasurementUnit.weight)) {
-                for (BasketItem doscountedBasketItem: basket) {
-                    double itemWeight = basketItem.getWeight();
-                    String discountedBarCode  = doscountedBasketItem.getGroceryItem().getBarCode();
-                    if (!countedBarCodes.contains(barCode)) {
-                        weight += itemWeight ;
-                        if (weight >= discountableWeightPerGroup) {
-                            //double discountableGroupsNum = Math.floor(weight / discountableWeightPerGroup);
-                            discount += weight * itemPrice * weightDiscountRate;
-                            countedBarCodes.add(barCode);
-                        }
+                double  discountItemWeight = 0;
+                for (BasketItem discountedBasketItem: basket) {
+                    //String discountedBarCode  = doscountedBasketItem.getGroceryItem().getBarCode();
+
+                    if (discountedBasketItem.getGroceryItem().getBarCode().equalsIgnoreCase(barCode)
+                            &&!countedBarCodes.contains(barCode)) {
+                        discountItemWeight += basketItem.getWeight() ;
                     }
 
                 }
-                countedBarCodes.add(barCode);
+                if (discountItemWeight >= discountableCountPerGroup) {
+                    double discountableGroupsNum = Math.floor(discountItemWeight / discountableCountPerGroup);
+                    discount += itemPrice * discountableGroupsNum * countDiscountRate ;;
+                    countedBarCodes.add(barCode);
+
+                }
             }
 
         }
@@ -69,19 +72,23 @@ public class PromotionServiceImpl implements PromotionsService{
             double itemPrice = basketItem.getGroceryItem().getPrice();
             MeasurementUnit measurementUnit = basketItem.getGroceryItem().getMeasurementUnit();
           if(isCodeDiscounted(barCode) && measurementUnit.equals(MeasurementUnit.count)) {
+              int discountItemCount = 0;
               for (BasketItem doscountedBasketItem: basket) {
-                   //String discountedBarCode  = doscountedBasketItem.getGroceryItem().getBarCode();
-                  if (!countedBarCodes.contains(barCode)) {
-                      count += 1;
-                      if (count >= discountableCountPerGroup) {
-                          double discountableGroupsNum = Math.floor(count / discountableCountPerGroup);
-                          discount += itemPrice * discountableGroupsNum * countDiscountRate * discountableCountPerGroup;;
-                          countedBarCodes.add(barCode);
-                      }
+                  //String discountedBarCode  = doscountedBasketItem.getGroceryItem().getBarCode();
+                  if (doscountedBasketItem.getGroceryItem().getBarCode().equalsIgnoreCase(barCode)
+                  &&!countedBarCodes.contains(barCode)) {
+                      discountItemCount ++;
                   }
 
               }
-              countedBarCodes.add(barCode);
+              if (discountItemCount >= discountableCountPerGroup) {
+                  double discountableGroupsNum = Math.floor(discountItemCount / discountableCountPerGroup);
+                  discount += itemPrice * discountableGroupsNum * countDiscountRate * discountableCountPerGroup;;
+                  countedBarCodes.add(barCode);
+
+              }
+
+
           }
 
         }

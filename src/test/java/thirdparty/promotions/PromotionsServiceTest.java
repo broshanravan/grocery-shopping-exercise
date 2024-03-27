@@ -18,8 +18,7 @@ public class PromotionsServiceTest {
     @BeforeAll
     static void prepareBasket() {
         GroceryItem Banana = new GroceryItem(1,"BA123","Banana", MeasurementUnit.weight,1.50);
-        GroceryItem Egg = new GroceryItem(1,"EG123","Egg", MeasurementUnit.count,0.70);
-        GroceryItem anotherEgg = new GroceryItem(1,"EG123","Egg", MeasurementUnit.count,0.70);
+        GroceryItem Egg = new GroceryItem(1,"EG123","Egg", MeasurementUnit.count,1.00);
         GroceryItem Banana2 = new GroceryItem(1,"BA123","Banana", MeasurementUnit.weight,1.50);
         GroceryItem Serial = new GroceryItem(3,"SR123","SERIALS", MeasurementUnit.count,2.50);
         GroceryItem Grape = new GroceryItem(4,"GR123","Grape", MeasurementUnit.weight,1.00);
@@ -29,7 +28,7 @@ public class PromotionsServiceTest {
         basket.add(new BasketItem(Egg,0));
         basket.add(new BasketItem(Egg,0));
         basket.add(new BasketItem(Egg,0));
-        basket.add(new BasketItem(anotherEgg,0));
+        basket.add(new BasketItem(Egg,0));
         basket.add(new BasketItem(Grape,2.00));
         basket.add(new BasketItem(Milk,0));
         basket.add(new BasketItem(Banana2,2.00));
@@ -56,20 +55,20 @@ public class PromotionsServiceTest {
     @Test
     public void getTotalDiscountTest(){
         double totalDiscount = promotionsService.getTotalDiscount(basket);
-        assert(totalDiscount == 1.82) ;
+        assert(totalDiscount == 2.75) ;
     }
 
     @Test
     public void getCountDiscountWeightTest(){
         double weightDiscount = promotionsService.getDiscountWeight(basket);
-        assert(weightDiscount == 1.12);
+        assert(weightDiscount == 0.75);
 
     }
 
     @Test
     public void getCountDiscountCountTest(){
         double countDiscount = promotionsService.getDiscountCount(basket);
-        assert(countDiscount == 0.7);
+        assert(countDiscount == 2);
 
     }
 
