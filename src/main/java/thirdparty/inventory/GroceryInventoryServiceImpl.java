@@ -60,6 +60,10 @@ public class GroceryInventoryServiceImpl implements GroceryInventoryService{
      */
     public GroceryItem getGroceryItem(String barCode) {
         //Todo Using H2 database with Spring JPA to retrieve the item data
+
+        if(itemsMap.get(barCode) == null) {
+            throw new InvalidGroceryException("Item with this barCode does not exist");
+        }
        return (GroceryItem)itemsMap.get(barCode);
     }
 

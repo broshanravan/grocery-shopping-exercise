@@ -3,6 +3,9 @@ package thirdparty.paymentgateway;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
 
 @Getter
 @Setter
@@ -14,8 +17,10 @@ public class GroceryPaymentServiceImpl implements GroceryPaymentService {
     @Override
     public void makePayment(long accountId, double totalAmountToPay) {
 
-        paymentCompleted = false;
 
+        paymentCompleted = false;
+        final DecimalFormat decfor = new DecimalFormat("0.00");
+        decfor.setRoundingMode(RoundingMode.DOWN);
         double paid = Double.parseDouble(paidAmount);
         if(paid < totalAmountToPay){
             double remaining = totalAmountToPay - paid ;
@@ -23,7 +28,8 @@ public class GroceryPaymentServiceImpl implements GroceryPaymentService {
 
         } else if (paid > totalAmountToPay) {
             change = paid - totalAmountToPay ;
-            paymentResultMessage = "Change due £ " + change;
+
+            paymentResultMessage = "Change due £ " + decfor.format(change);;
             paymentCompleted =true;
         } else {
             paymentResultMessage = "";
