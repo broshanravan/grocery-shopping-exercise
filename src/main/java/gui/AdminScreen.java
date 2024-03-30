@@ -1,9 +1,11 @@
 package gui;
 
-import Services.StockMaintenanceService;
-import Services.StockMaintenanceServiceImpl;
+import Services.MaintenanceService;
+import Services.MaintenanceServiceImpl;
 import thirdparty.entities.GroceryItem;
 import thirdparty.entities.enums.MeasurementUnit;
+import thirdparty.inventory.GroceryItemsInventory;
+import thirdparty.inventory.GroceryItemsInventoryImpl;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +14,8 @@ import java.awt.event.ActionListener;
 
 public class AdminScreen extends JDialog{
 
-    StockMaintenanceService stockMaintenanceService = new StockMaintenanceServiceImpl();
+    MaintenanceService maintenanceService = new MaintenanceServiceImpl();
+    GroceryItemsInventory groceryItemsInventory = new GroceryItemsInventoryImpl();
 
     private int hight = 200;
     private int width = 465;
@@ -122,10 +125,11 @@ public class AdminScreen extends JDialog{
                String measurementUnit = measurementCombo.getSelectedItem().toString();
                double priceNum = 0;
 
-                if (barCode == null ||  "".equalsIgnoreCase(barCode.trim()) || !stockMaintenanceService.isBarCodeValid(barCode)) {
+                if (barCode == null ||  "".equalsIgnoreCase(barCode.trim()) || !maintenanceService.isBarFormatCodeValid(barCode)) {
+                    barCodeErrorLbl.setText("Invalid Barcode, Please try again");
                     barCodeErrorLbl.setVisible(true);
                     validItemData = false;
-                } else if (stockMaintenanceService.isBarcodeInUse(barCode)){
+                } else if (groceryItemsInventory.barCodeAlreadyExist(barCode)){
                     barCodeErrorLbl.setText("Bar Code is already in use");
                     barCodeErrorLbl.setVisible(true);
                     validItemData = false;
@@ -153,7 +157,7 @@ public class AdminScreen extends JDialog{
                 }
                 if (validItemData)  {
                     GroceryItem groceryItem = new GroceryItem(barCode, name, MeasurementUnit.valueOf(measurementUnit), priceNum);
-                    stockMaintenanceService.saveItemToInventory(groceryItem);
+                    maintenanceService.saveItemToInventory(groceryItem);
                     clearFields(groceryItem.getName());
                 }
 

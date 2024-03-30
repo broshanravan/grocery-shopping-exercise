@@ -1,22 +1,40 @@
 package thirdparty.inventory;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.orm.jpa.EntityManagerFactoryInfo;
 import thirdparty.entities.Credentials;
 import thirdparty.entities.GroceryItem;
+import thirdparty.entities.PromotionalDiscount;
 import thirdparty.entities.enums.MeasurementUnit;
 import thirdparty.inventory.exception.InvalidGroceryException;
 
 import java.util.*;
 import java.util.logging.Logger;
 
-public class GroceryInventoryServiceImpl implements GroceryInventoryService{
+public class GroceryItemsInventoryImpl implements GroceryItemsInventory {
 
     Logger logger = Logger.getLogger(this.getClass().getName());
+
+
+    /**
+     * This methode retrieves the promotional discounts
+     * defined in the relevant table, each discount
+     * is defined considering the
+     * grocery item
+     * threshold on which the discount is being applied
+     * the discount rate
+     * @return
+     */
+    public  Map<String, PromotionalDiscount> getPromotionalDiscounts(){
+
+        //todo This functionality is currently created to provide hard
+        // coded set of discounts but eventualy in needs to be moves to H2 database
+
+        Map<String, PromotionalDiscount> promotionalDiscounts = new HashMap<String, PromotionalDiscount>();
+        promotionalDiscounts.put("BN123", (new PromotionalDiscount("BN123", 0.25,3)));
+        promotionalDiscounts.put("EG123", (new PromotionalDiscount("EG123", 0.5,2)));
+
+        return promotionalDiscounts;
+
+    }
 
 
     public Credentials getCredentials(){
@@ -35,7 +53,7 @@ public class GroceryInventoryServiceImpl implements GroceryInventoryService{
      * @param barcode
      * @return
      */
-    public boolean doesBarCodeExist(String barcode){
+    public boolean barCodeAlreadyExist(String barcode){
          return barCodeList.contains(barcode);
     }
 

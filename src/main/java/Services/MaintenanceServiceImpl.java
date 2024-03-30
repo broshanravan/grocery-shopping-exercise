@@ -1,19 +1,24 @@
 package Services;
 
 import thirdparty.entities.GroceryItem;
-import thirdparty.inventory.GroceryInventoryService;
-import thirdparty.inventory.GroceryInventoryServiceImpl;
+import thirdparty.entities.PromotionalDiscount;
+import thirdparty.inventory.GroceryItemsInventory;
+import thirdparty.inventory.GroceryItemsInventoryImpl;
 
-public class StockMaintenanceServiceImpl implements StockMaintenanceService{
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-    GroceryInventoryService inventoryService = new GroceryInventoryServiceImpl();
-    private boolean isItemDetailsValid = true;
-    public boolean isBarcodeInUse(String barCode){
-        return inventoryService.doesBarCodeExist(barCode);
 
-    }
+public class MaintenanceServiceImpl implements MaintenanceService {
 
-    public boolean isBarCodeValid(String barCode){
+
+
+    GroceryItemsInventory inventoryService = new GroceryItemsInventoryImpl();
+
+
+
+    public boolean isBarFormatCodeValid(String barCode){
 
         Boolean barCodeValid = true;
         String barcodeLetters  = barCode.substring(0,2);
@@ -38,14 +43,9 @@ public class StockMaintenanceServiceImpl implements StockMaintenanceService{
         return barCodeValid;
     }
 
-    public void addItemToInventory(GroceryItem groceryItem){
-        if(isItemDetailsValid) {
-
-        }
-
-    }
     public void saveItemToInventory(GroceryItem groceryItem){
         inventoryService.saveGroceryItem(groceryItem);
+
 
     }
 }

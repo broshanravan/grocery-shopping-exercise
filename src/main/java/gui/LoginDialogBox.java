@@ -23,7 +23,7 @@ public class LoginDialogBox extends JDialog {
     JLabel passwordErrLbl = new JLabel("Please enter a valid password");
 
     JButton loginBtn = new JButton("Login");
-    JButton cancelBtn = new JButton("cancel");
+    JButton cancelBtn = new JButton("Cancel");
 
     public LoginDialogBox(){
         setupScreen();
@@ -97,20 +97,15 @@ public class LoginDialogBox extends JDialog {
                        AdminScreen adminScreen = new AdminScreen();
                        adminScreen.setModal(true);
                        adminScreen.setVisible(true);
+                   } else{
+                       displayLoginError();
                    }
 
                }
 
 
             }else  if(e.getActionCommand().equals("Cancel")){
-
-
-              /*
-               AdminScreen adminScreen = new AdminScreen();
-               adminScreen.setModal(true);
-               adminScreen.setVisible(true);
-
-              */
+               exit();
             }
 
         }
@@ -118,6 +113,11 @@ public class LoginDialogBox extends JDialog {
 
     public void exit(){
         this.setVisible(false);
+    }
+
+
+    private void displayLoginError(){
+        JOptionPane.showMessageDialog(this, "Wrong login details provided Please try again" );
     }
 
 

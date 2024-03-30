@@ -1,12 +1,10 @@
 package thirdparty.promotions;
 
 import thirdparty.entities.BasketItem;
-import uk.gov.dwp.uc.pairtest.domain.GroceryRequest;
 
-import java.math.BigDecimal;
 import java.util.List;
 
-public interface PromotionsService {
+public interface PromotionService {
 
     public double getDiscountWeight(List<BasketItem> basket);
 
