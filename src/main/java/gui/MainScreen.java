@@ -39,12 +39,8 @@ public class MainScreen extends JFrame {
     double countDiscountRate = 0.5;
     double discountableCount = 2;
     List<String> discountableBarCodes = List.of("BN123","EG123");
-
     private JPanel backGroundPnl;
-
     double promotionalDiscount = 0 ;
-
-
     ActionListener buttonListener = new MainScreenButtonListener(this);
 
     JLabel itemDetailsLbl = new JLabel("Item name                                Qty/weight                               Price");
@@ -56,26 +52,17 @@ public class MainScreen extends JFrame {
     JLabel afterDiscLbl = new JLabel("Total after discount £");
     JTextField promotionFld = new JTextField();
     JTextField afterdiscountFld = new JTextField();
-
-
-
     JLabel paymentResultlable = new JLabel();
     JLabel invalidCodeLbl  = new JLabel("Invalid barcode, please try again");
-
     JLabel invalidWeightLbl  = new JLabel("Please enter a valid weight");
     JLabel weightLbl  = new JLabel("weight");
     JLabel nameLbl  = new JLabel("Item Name");
     JTextField nameFld = new JTextField();
     JLabel priceLbl  = new JLabel("price £");
     JTextField priceFld = new JTextField();
-
-
     JTextField weightFld = new JTextField();
-
     protected List<BasketItem> basket = new LinkedList<BasketItem>();
-
     private static final DecimalFormat decfor = new DecimalFormat("0.00");
-
     JLabel totalLbl  = new JLabel("Total price £");
     JTextField totalFld = new JTextField();
     JLabel VATLbl  = new JLabel("VAT £");
@@ -83,29 +70,17 @@ public class MainScreen extends JFrame {
     JLabel grandTotalLbl  = new JLabel("Grand Total £");
     JTextField grandTotalFld = new JTextField();
     JButton addBtn = new JButton("Add Item");
-
     JButton clearBtn = new JButton("Clear");
-
     JButton payBtn = new JButton("Make Payment");
     JButton exitBtn = new JButton("Exit");
     JButton adminBtn = new JButton("Admin");
-
     JLabel paymentErrorLbl = new JLabel("Payment Should be numeric");
-
     TextArea receipt = new TextArea(100,420);
-
     JScrollPane scrollPane = new JScrollPane(receipt);
-
     private int hight = 550;
     private int width = 460;
 
-    public MainScreen(){
-        setupScreen();
-        setVisible(true);
-    }
-
     GroceryItem groceryItem = null;
-
 
     private void setupScreen() {
 
@@ -160,6 +135,9 @@ public class MainScreen extends JFrame {
         getContentPane().add(priceFld);
 
         getContentPane().add(totalFld);
+        totalFld.setText("0.00");
+        paymentFld.setText("0.00");
+        grandTotalFld.setText("0.00");
         getContentPane().add(vatFld);
         getContentPane().add(grandTotalFld);
         getContentPane().add(itemDetailsLbl);
@@ -370,137 +348,24 @@ public class MainScreen extends JFrame {
     int y = 0;
     String itemLabelContents ="";
 
-/*
-
-    private void addItemToBasket(GroceryItem groceryItem){
-        invalidWeightLbl.setVisible(true);
-        if(groceryItem.getMeasurementUnit().equals(MeasurementUnit.weight)){
-            String weight = weightFld.getText();
-            if(weight != null && !"".equalsIgnoreCase(weight.trim()) && groceryPaymentService.isAmountValid(weight)) {
-                double weightNum =Double.parseDouble(weight);
-                double price = weightNum * groceryItem.getPrice();
-                basket.add(new BasketItem(groceryItem,weightNum ));
-                addItemToReceipt(new BasketItem(groceryItem, weightNum ));
-                calculateTotal();
-                clearItemDetails();
-            } else {
-                invalidWeightLbl.setVisible(true);
-            }
-        } else {
-            basket.add(new BasketItem(groceryItem, 0));
-            addItemToReceipt(new BasketItem(groceryItem, 0));
-            clearItemDetails();
-            calculateTotal();
-        }
-        promotionalDiscount = promotionsService.getTotalDiscount(basket);
-        promotionFld.setText(String.valueOf(promotionalDiscount));
+    public MainScreen(){
+        setupScreen();
+        setVisible(true);
     }
-
-
-    /*
-   ActionListener buttonListener = new ActionListener() {
-       @Override
-       public void actionPerformed(ActionEvent e) {
-           if (e.getActionCommand().equals("Add Item")){
-               if(groceryItem != null) {
-                   addItemToBasket(groceryItem);
-               }
-
-           } else if(e.getActionCommand().equals("Payment")){
-               makePayment();
-               isPaymentCompleted();
-           }else if(e.getActionCommand().equals("Admin")){
-               LoginDialogBox  loginDialogBox= new LoginDialogBox();
-               loginDialogBox.setModal(true);
-               loginDialogBox.setVisible(true);
-
-           }
-           else if(e.getActionCommand().equals("Clear")){
-               resetScreen();
-           }else if(e.getActionCommand().equals("Exit")){
-              System.exit(0);
-           }
-
-       }
-   };
-
-     */
-/*
-    private boolean isPaymentCompleted(){
-
-        if(paymentCompleted) {
-            JOptionPane.showMessageDialog(this, paymentResultMessage );
-            resetScreen();
-            return true;
-        } else{
-            JOptionPane.showMessageDialog(this,  paymentResultMessage );
-            return  false;
-
-        }
-    }
-
-
-   /* private void addItemToReceipt(BasketItem basketItem){
-        decfor.setRoundingMode(RoundingMode.DOWN);
-        String name = basketItem.getGroceryItem().getName();
-        MeasurementUnit measurementUnit = basketItem.getGroceryItem().getMeasurementUnit()  ;
-
-        double weight = basketItem.getWeight();
-        double price = basketItem.getGroceryItem().getPrice();
-        //price = Double.parseDouble(decfor.format(price));
-        String itemName = basketItem.getGroceryItem().getName();
-
-        if(measurementUnit.equals(MeasurementUnit.count)) {
-
-            itemLabelContents += itemName + getTabs(itemName.length(), true) + weight + getTabs(2, false) +
-                    "£" + String.valueOf(decfor.format(price)) + "\n";
-        } else {
-            price = price * weight;
-            itemLabelContents += itemName + getTabs(itemName.length(), true) + weight + getTabs(2, false) +
-                    "£" + String.valueOf(decfor.format(price)) + "\n";
-
-        }
-        JLabel itemLbl = new JLabel(itemLabelContents);
-        receipt.setText(itemLabelContents);
-        itemLbl.setBounds(0, y, 380,20);
-        promotionFld.setText(String.valueOf(promotionalDiscount));
-        y += 20;
-
-    }
-
-    private void calculateTotal(){
-        double total = 0;
-
-        for(BasketItem basketItem :basket ){
-            if(basketItem.getGroceryItem().getMeasurementUnit().equals(MeasurementUnit.weight)){
-                total += basketItem.getGroceryItem().getPrice() * basketItem.getWeight();
-            } else {
-                total += basketItem.getGroceryItem().getPrice();
-            }
-
-        }
-        total = total ;
-        double priceIncludingPromotions = total - promotionalDiscount;
-        double vat = (priceIncludingPromotions) * 0.17;
-        double grandTotal = priceIncludingPromotions  + vat;
-        totalFld.setText(String.valueOf(decfor.format(total)));
-        promotionFld.setText(String.valueOf(promotionalDiscount));
-        vatFld.setText(String.valueOf(decfor.format(vat)));
-        grandTotalFld.setText(String.valueOf(decfor.format(grandTotal)));
-    }
-*/
 
     public void resetScreen(){
         codeFld.setText("");
         nameFld.setText("");
         weightFld.setText("");
         weightFld.setEditable(false);
-        totalFld.setText("");
+
         vatFld.setText("");
         priceFld.setText("");
         promotionFld.setText("");
-        paymentFld.setText("");
-        grandTotalFld.setText("");
+        totalFld.setText("0.00");
+        paymentFld.setText("0.00");
+        grandTotalFld.setText("0.00");
+        this.afterdiscountFld.setText("");
         basket.removeAll(basket);
         paymentResultlable.setVisible(false);
         paymentErrorLbl.setVisible(false);
@@ -526,35 +391,7 @@ public class MainScreen extends JFrame {
     String paymentResultMessage = "";
     boolean paymentCompleted =false;
 
-    /*
-    private void makePayment() {
-        //groceryPaymentService.setPaidAmount(paymentFld.getText());
 
-        double total = Double.parseDouble(grandTotalFld.getText());
-        String paidStr =paymentFld.getText();
-        if(groceryPaymentService.isAmountValid(paidStr)) {
-            double paymentAmount = Double.parseDouble(paidStr);
-            double grandTotal = Double.parseDouble(grandTotalFld.getText());
-            groceryPaymentService.setPaidAmount(paidStr);
-            if(paymentAmount >= grandTotal) {
-                groceryPaymentService.makePayment(123, total);
-
-                PaymentResult paymentResult = groceryPaymentService.getPaymentResult();
-                double change = paymentResult.getChange();
-                paymentResultMessage = "Your Change is " + Double.parseDouble(decfor.format(change)) + ", thank you!";
-                paymentResultlable.setText(paymentResult.getPaymentResultMessage());
-                paymentCompleted = true;
-            }else {
-                double remaining = grandTotal - paymentAmount;
-                paymentResultMessage ="amount left to pay £" +  Double.parseDouble(decfor.format(remaining));
-                paymentCompleted = false;
-
-            }
-        } else {
-            paymentErrorLbl.setVisible(true);
-        }
-    }
-*/
     private String getTabs(int wordLength, boolean isFirst){
         String tabs = "";
         int spaces = 0;

@@ -112,7 +112,7 @@ public class MainScreenButtonListener implements ActionListener {
         String name = basketItem.getGroceryItem().getName();
         MeasurementUnit measurementUnit = basketItem.getGroceryItem().getMeasurementUnit()  ;
 
-        double weight = basketItem.getWeight();
+        double weight = basketItem.getUnit();
         double price = basketItem.getGroceryItem().getPrice();
         //price = Double.parseDouble(decfor.format(price));
         String itemName = basketItem.getGroceryItem().getName();
@@ -143,7 +143,7 @@ public class MainScreenButtonListener implements ActionListener {
 
         for(BasketItem basketItem :basket ){
             if(basketItem.getGroceryItem().getMeasurementUnit().equals(MeasurementUnit.weight)){
-                total += basketItem.getGroceryItem().getPrice() * basketItem.getWeight();
+                total += basketItem.getGroceryItem().getPrice() * basketItem.getUnit();
             } else {
                 total += basketItem.getGroceryItem().getPrice();
             }
@@ -169,7 +169,7 @@ public class MainScreenButtonListener implements ActionListener {
 
         double total = Double.parseDouble(mainScreen.grandTotalFld.getText());
         String paidStr =mainScreen.paymentFld.getText();
-        if(groceryPaymentService.isAmountValid(paidStr)) {
+        if(groceryPaymentService.isAmountValid(paidStr) && total != 0) {
             double paymentAmount = Double.parseDouble(paidStr);
             double grandTotal = Double.parseDouble(mainScreen.grandTotalFld.getText());
             groceryPaymentService.setPaidAmount(paidStr);
@@ -178,7 +178,7 @@ public class MainScreenButtonListener implements ActionListener {
 
                 PaymentResult paymentResult = groceryPaymentService.getPaymentResult();
                 double change = paymentResult.getChange();
-                mainScreen.paymentResultMessage = "Your Change is " + Double.parseDouble(decfor.format(change)) + ", thank you!";
+                mainScreen.paymentResultMessage = "Your Change is " + Double.parseDouble(decfor.format(change)) + ", Thank you!";
                 mainScreen.paymentResultlable.setText(paymentResult.getPaymentResultMessage());
                 mainScreen.paymentCompleted = true;
             }else {

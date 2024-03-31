@@ -60,7 +60,7 @@ public class AdminScreen extends JDialog{
         getContentPane().add(barCodeErrorLbl);
         barCodeLbl.setBounds(10,10, 80,20);
         barCodeFld.setBounds(130,10, 120,20);
-        barCodeErrorLbl.setBounds(260,10, 120,20);
+        barCodeErrorLbl.setBounds(260,10, 150,20);
         barCodeErrorLbl.setForeground(Color.RED);
         barCodeErrorLbl.setVisible(false);
 
@@ -129,7 +129,11 @@ public class AdminScreen extends JDialog{
                     barCodeErrorLbl.setText("Invalid Barcode, Please try again");
                     barCodeErrorLbl.setVisible(true);
                     validItemData = false;
-                } else if (groceryItemsInventory.barCodeAlreadyExist(barCode)){
+                }if (maintenanceService.containsSpecialCharacters(barCode)) {
+                    barCodeErrorLbl.setText("No special characters allowed");
+                    barCodeErrorLbl.setVisible(true);
+                    validItemData = false;
+                }else if (groceryItemsInventory.barCodeAlreadyExist(barCode)){
                     barCodeErrorLbl.setText("Bar Code is already in use");
                     barCodeErrorLbl.setVisible(true);
                     validItemData = false;

@@ -24,14 +24,22 @@ public class PromotionServiceImpl implements PromotionService {
     MaintenanceService maintenanceService = new MaintenanceServiceImpl();
     GroceryItemsInventory groceryItemsInventory = new GroceryItemsInventoryImpl();
     Map<String, PromotionalDiscount>  promotionalDiscounts = groceryItemsInventory.getPromotionalDiscounts();
-    Set<String> discountedBarcodes = promotionalDiscounts.keySet();
+    Set<String> discountedBarcodes;// = promotionalDiscounts.keySet();
 
     public PromotionalDiscount getBarcodePromotionalDiscountRate(String barcode){
         return promotionalDiscounts.get(barcode);
     }
 
-
+    /**
+     * Uses the promotional data to go through
+     * the items in the basket and calculate the total
+     * promotional discount for all items for which the
+     * measurement unit s weight
+     * @param basket
+     * @return
+     */
     public double getDiscountWeight(List<BasketItem> basket){
+        discountedBarcodes = promotionalDiscounts.keySet();
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         double discount = 0;
         double weight = 0;
@@ -47,7 +55,7 @@ public class PromotionServiceImpl implements PromotionService {
                 for (BasketItem discountedBasketItem: basket) {
                     if (discountedBasketItem.getGroceryItem().getBarCode().equalsIgnoreCase(barCode)
                             &&!countedBarCodes.contains(barCode)) {
-                        discountItemWeight += basketItem.getWeight() ;
+                        discountItemWeight += basketItem.getUnit() ;
                     }
 
                 }
@@ -66,7 +74,16 @@ public class PromotionServiceImpl implements PromotionService {
         return discount;
     }
 
+    /**
+     *  Uses the promotional data to go through
+     *  the items in the basket and calculate the total
+     *  promotional discount for all items for which the
+     *   measurement unit s count
+     * @param basket
+     * @return
+     */
     public double getDiscountCount(List<BasketItem> basket){
+        discountedBarcodes = promotionalDiscounts.keySet();
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         double discount = 0;
         int count = 0;
@@ -84,12 +101,12 @@ public class PromotionServiceImpl implements PromotionService {
                   //String discountedBarCode  = doscountedBasketItem.getGroceryItem().getBarCode();
                   if (doscountedBasketItem.getGroceryItem().getBarCode().equalsIgnoreCase(barCode)
                   &&!countedBarCodes.contains(barCode)) {
-                      discountedItemCount ++;
+                      discountedItemCount += doscountedBasketItem.getUnit();
                   }
 
               }
               if (discountedItemCount >= discountThreshold) {
-                  PromotionalDiscount promotionalDiscount =promotionalDiscounts.get(barCode);
+                  PromotionalDiscount promotionalDiscount = promotionalDiscounts.get(barCode);
 
                   discount += itemPrice * discountedItemCount * promotionalDiscount.getDiscountRate();;
                   countedBarCodes.add(barCode);
@@ -103,6 +120,12 @@ public class PromotionServiceImpl implements PromotionService {
         return discount;
     }
 
+    /**
+     * calculate the tonal amount of discount
+     * in the basket by adding both above discounts
+     * @param basket
+     * @return
+     */
     public double getTotalDiscount(List<BasketItem> basket){
        double totalDiscount = 0;
 
@@ -111,6 +134,11 @@ public class PromotionServiceImpl implements PromotionService {
 
         totalDiscount = discountWeight + discountCount;
         return totalDiscount;
+    }
+
+    @Override
+    public void setPromotionalDiscounts(Map<String, PromotionalDiscount> promotionalDiscountsIn){
+        this.promotionalDiscounts = promotionalDiscountsIn ;
     }
 
 

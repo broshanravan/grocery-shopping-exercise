@@ -11,5 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BasketItem {
     GroceryItem groceryItem;
-    double weight;
+    double unit;
 }

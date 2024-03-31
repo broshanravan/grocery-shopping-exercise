@@ -8,10 +8,11 @@ import java.util.List;
 
 public interface MaintenanceService {
 
-
     public boolean isBarFormatCodeValid(String barCode);
 
     public void saveItemToInventory(GroceryItem groceryItem);
+
+    public boolean containsSpecialCharacters(String providedStr);
 
 
 

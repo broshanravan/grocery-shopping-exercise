@@ -8,6 +8,8 @@ import thirdparty.inventory.GroceryItemsInventoryImpl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class MaintenanceServiceImpl implements MaintenanceService {
@@ -41,6 +43,21 @@ public class MaintenanceServiceImpl implements MaintenanceService {
         }
 
         return barCodeValid;
+    }
+
+    public boolean containsSpecialCharacters(String providedStr){
+        Pattern pattern = Pattern.compile(
+                "[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+
+
+        Matcher matcher = pattern.matcher(providedStr);
+
+
+        return  matcher.find();
+
+
+
+
     }
 
     public void saveItemToInventory(GroceryItem groceryItem){

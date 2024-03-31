@@ -31,6 +31,7 @@ public class GroceryItemsInventoryImpl implements GroceryItemsInventory {
         Map<String, PromotionalDiscount> promotionalDiscounts = new HashMap<String, PromotionalDiscount>();
         promotionalDiscounts.put("BN123", (new PromotionalDiscount("BN123", 0.25,3)));
         promotionalDiscounts.put("EG123", (new PromotionalDiscount("EG123", 0.5,2)));
+        promotionalDiscounts.put("OR123", (new PromotionalDiscount("OR123", 0.40,2)));
 
         return promotionalDiscounts;
 
@@ -117,6 +118,9 @@ public class GroceryItemsInventoryImpl implements GroceryItemsInventory {
 
         GroceryItem grape = new GroceryItem("GR123", "grape", MeasurementUnit.weight, 2.30);
         itemsMap.put("GR123",grape);
+
+        GroceryItem Orange = new GroceryItem(5,"OR123","Orange", MeasurementUnit.weight,0.70);
+        itemsMap.put("OR123",Orange);
 
     }
 
