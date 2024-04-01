@@ -12,8 +12,8 @@ public interface GroceryItemsInventory {
 
     public GroceryItem getGroceryItem(String barCode);
 
-     public void saveGroceryItem(GroceryItem groceryItem);
+    public void saveGroceryItem(GroceryItem groceryItem);
 
-    Map<String, PromotionalDiscount> getPromotionalDiscounts();
+    public Map<String, PromotionalDiscount> getPromotionalDiscounts();
 
 }

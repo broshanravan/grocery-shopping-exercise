@@ -107,6 +107,8 @@ public class PromotionServiceImpl implements PromotionService {
               }
               if (discountedItemCount >= discountThreshold) {
                   PromotionalDiscount promotionalDiscount = promotionalDiscounts.get(barCode);
+                  discountedItemCount -= (int)(discountedItemCount % discountThreshold);
+
 
                   discount += itemPrice * discountedItemCount * promotionalDiscount.getDiscountRate();;
                   countedBarCodes.add(barCode);

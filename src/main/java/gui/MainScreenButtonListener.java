@@ -154,7 +154,9 @@ public class MainScreenButtonListener implements ActionListener {
         double vat = (priceIncludingPromotions) * 0.17;
         double grandTotal = priceIncludingPromotions  + vat;
 
-        mainScreen.totalFld.setText(String.valueOf(decfor.format(total)));
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        decimalFormat.setRoundingMode(RoundingMode.UP);
+        mainScreen.totalFld.setText(decimalFormat.format(total));
         mainScreen.promotionFld.setText(decfor.format(promotionalDiscount));
         mainScreen.afterdiscountFld.setText(String.valueOf(decfor.format(priceIncludingPromotions)));
         mainScreen.vatFld.setText(String.valueOf(decfor.format(vat)));

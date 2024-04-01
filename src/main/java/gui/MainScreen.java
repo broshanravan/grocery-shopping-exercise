@@ -204,7 +204,7 @@ public class MainScreen extends JFrame {
                 calculateSingleItemPriceByWeight();
             }
             public void calculateSingleItemPriceByWeight() {
-                decfor.setRoundingMode(RoundingMode.DOWN);
+                decfor.setRoundingMode(RoundingMode.UP);
                 String weight = weightFld.getText();
                 if (groceryPaymentService.isAmountValid(weight)) {
                     double price = Double.parseDouble(weight) * groceryItem.getPrice();
