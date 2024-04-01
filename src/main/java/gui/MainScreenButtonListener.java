@@ -84,8 +84,8 @@ public class MainScreenButtonListener implements ActionListener {
                 mainScreen.invalidWeightLbl.setVisible(true);
             }
         } else {
-            basket.add(new BasketItem(groceryItem, 0));
-            addItemToReceipt(new BasketItem(groceryItem, 0));
+            basket.add(new BasketItem(groceryItem, 1));
+            addItemToReceipt(new BasketItem(groceryItem, 1));
             mainScreen.clearItemDetails();
             calculateTotal();
         }
@@ -112,7 +112,7 @@ public class MainScreenButtonListener implements ActionListener {
         String name = basketItem.getGroceryItem().getName();
         MeasurementUnit measurementUnit = basketItem.getGroceryItem().getMeasurementUnit()  ;
 
-        double weight = basketItem.getUnit();
+        double weight = basketItem.getQuantity();
         double price = basketItem.getGroceryItem().getPrice();
         //price = Double.parseDouble(decfor.format(price));
         String itemName = basketItem.getGroceryItem().getName();
@@ -143,7 +143,7 @@ public class MainScreenButtonListener implements ActionListener {
 
         for(BasketItem basketItem :basket ){
             if(basketItem.getGroceryItem().getMeasurementUnit().equals(MeasurementUnit.weight)){
-                total += basketItem.getGroceryItem().getPrice() * basketItem.getUnit();
+                total += basketItem.getGroceryItem().getPrice() * basketItem.getQuantity();
             } else {
                 total += basketItem.getGroceryItem().getPrice();
             }

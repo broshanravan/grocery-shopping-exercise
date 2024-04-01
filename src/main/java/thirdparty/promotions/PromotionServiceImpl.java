@@ -55,7 +55,7 @@ public class PromotionServiceImpl implements PromotionService {
                 for (BasketItem discountedBasketItem: basket) {
                     if (discountedBasketItem.getGroceryItem().getBarCode().equalsIgnoreCase(barCode)
                             &&!countedBarCodes.contains(barCode)) {
-                        discountItemWeight += basketItem.getUnit() ;
+                        discountItemWeight += basketItem.getQuantity() ;
                     }
 
                 }
@@ -101,7 +101,7 @@ public class PromotionServiceImpl implements PromotionService {
                   //String discountedBarCode  = doscountedBasketItem.getGroceryItem().getBarCode();
                   if (doscountedBasketItem.getGroceryItem().getBarCode().equalsIgnoreCase(barCode)
                   &&!countedBarCodes.contains(barCode)) {
-                      discountedItemCount += doscountedBasketItem.getUnit();
+                      discountedItemCount += doscountedBasketItem.getQuantity();
                   }
 
               }

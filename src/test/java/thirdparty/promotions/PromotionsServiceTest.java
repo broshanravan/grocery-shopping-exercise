@@ -23,7 +23,7 @@ public class PromotionsServiceTest {
     GroceryItemsInventory groceryItemsInventory = Mockito.mock(GroceryItemsInventoryImpl.class);
 
     GroceryItem Banana = new GroceryItem(1,"BN123","Banana", MeasurementUnit.weight,1.50);
-    GroceryItem Egg = new GroceryItem(1,"EG123","Egg", MeasurementUnit.count,1.00);
+    GroceryItem Egg = new GroceryItem(1,"EG123","Egg", MeasurementUnit.count,2.00);
     GroceryItem Serial = new GroceryItem(3,"SR123","SERIALS", MeasurementUnit.count,2.50);
     GroceryItem Grape = new GroceryItem(4,"GR123","Grape", MeasurementUnit.weight,1.00);
     GroceryItem Milk = new GroceryItem(5,"MK123","Milk", MeasurementUnit.count,0.70);
@@ -68,7 +68,7 @@ public class PromotionsServiceTest {
     public void getTotalDiscountTest(){
 
         double totalDiscount = promotionService.getTotalDiscount(basket);
-        assert(totalDiscount == 3.12) ;
+        assert(totalDiscount == 5.12) ;
     }
 
     @Test
@@ -81,7 +81,7 @@ public class PromotionsServiceTest {
     @Test
     public void getDiscountCountTest(){
         double countDiscount = promotionService.getDiscountCount(basket);
-        assert(countDiscount == 2);
+        assert(countDiscount == 4);
 
     }
 
@@ -93,7 +93,7 @@ public class PromotionsServiceTest {
 
         double countDiscount = promotionService.getDiscountCount(basket);
 
-        assert(countDiscount == 3.6);
+        assert(countDiscount == 5.6);
 
     }
 
