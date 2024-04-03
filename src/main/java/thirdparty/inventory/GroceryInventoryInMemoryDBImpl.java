@@ -31,7 +31,7 @@ public class GroceryInventoryInMemoryDBImpl implements GroceryItemsInventory{
     public Map<String, PromotionalDiscount> getPromotionalDiscounts(){
         Map<String, PromotionalDiscount> discountMap= new HashMap<String, PromotionalDiscount>();
         //Todo Implementing the Hibernate functionality to
-        // to find out if theere are any promotional discounts
+        // to find out if there are any promotional discounts
         // associated with the items in the receipt
 
 
