@@ -60,7 +60,7 @@ public class AdminScreen extends JDialog{
         getContentPane().add(barCodeErrorLbl);
         barCodeLbl.setBounds(10,10, 80,20);
         barCodeFld.setBounds(130,10, 120,20);
-        barCodeErrorLbl.setBounds(260,10, 150,20);
+        barCodeErrorLbl.setBounds(260,10, 180,20);
         barCodeErrorLbl.setForeground(Color.RED);
         barCodeErrorLbl.setVisible(false);
 
